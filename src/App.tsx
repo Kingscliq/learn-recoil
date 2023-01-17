@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { atom, useRecoilState, useRecoilValue } from "recoil"
+
+const darkModeToggle = atom({
+  key: "darkModeToggle",
+  default: false
+})
+
+const ToggleCheck: React.FC<{}> = () => {
+
+  const [darkMode, setDarkMode] = useRecoilState(darkModeToggle)
+
+  return (
+    <input type="checkbox" checked={darkMode} onChange={(e) => setDarkMode(e.currentTarget.checked)} />
+  )
+}
+
+const Button: React.FC<{}> = () => {
+
+  const darkMode = useRecoilValue(darkModeToggle)
+
+  return (
+    <button style={{ backgroundColor: darkMode ? "black" : "white", color: darkMode ? "white" : "black" }}>Button</button>
+  )
+
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div><ToggleCheck /></div>
+      <div><Button /></div>
     </div>
   );
 }
