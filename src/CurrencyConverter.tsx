@@ -6,6 +6,8 @@ const CurrencyConverter = () => {
     const [usd, setUsd] = useState<number>(0)
     const [eur, setEur] = useState<number>(0)
 
+
+    console.log(eur)
     return (
         <div className=''>
             <div>
