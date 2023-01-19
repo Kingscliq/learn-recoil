@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { atom, selector, useRecoilState, useRecoilValue } from 'recoil'
+import React from 'react'
+import { atom, selector, useRecoilState } from 'recoil'
 
 const conversionRate = 0.83
 const usdAtom = atom({
@@ -7,27 +7,28 @@ const usdAtom = atom({
     default: 1
 })
 
-const eurSelector = selector({
+const eurSelector = selector<number>({
     key: "eur",
-    get: ({ get }) => get(usdAtom) * conversionRate
+    get: ({ get }) => get(usdAtom) * conversionRate,
+    set: ({ set }, newEuroValue) => {
+        // @ts-ignore
+        const newUsd = newEuroValue / conversionRate
+        // @ts-ignore
+        set(usdAtom, newUsd)
+    }
+
 })
 
 const CurrencyConverter = () => {
 
-
-    // const [usd, setUsd] = useState<number>(0)
-    // const [eur, setEur] = useState<number>(0)
-
     const [usd, setUsd] = useRecoilState(usdAtom)
-    const eur = useRecoilValue(eurSelector)
+    const [eur, setEuro] = useRecoilState(eurSelector)
 
-
-    console.log(eur)
     return (
         <div className=''>
             <div>
                 <input type="text" value={usd} onChange={(e) => setUsd(e.target.value as unknown as number)} placeholder='Enter amount' />
-                <input type="text" placeholder='Enter Amount' value={usd * conversionRate} />
+                <input type="text" placeholder='Enter Amount' value={eur} onChange={(e) => setEuro(e.target.value as unknown as number)} />
             </div>
             <div><button>Calculate</button></div>
         </div>
